@@ -1,0 +1,74 @@
+[
+  {
+    "id": "user-1",
+    "name": "Anita Balasanyan",
+    "email": "anita.balasanyan@company.com",
+    "department": "Engineering"
+  },
+  {
+    "id": "user-2",
+    "name": "David Miller",
+    "email": "david.miller@company.com",
+    "department": "Engineering"
+  },
+  {
+    "id": "user-3",
+    "name": "Sophie Johnson",
+    "email": "sophie.johnson@company.com",
+    "department": "Design"
+  },
+  {
+    "id": "user-4",
+    "name": "Michael Brown",
+    "email": "michael.brown@company.com",
+    "department": "Product"
+  },
+  {
+    "id": "user-5",
+    "name": "Emma Wilson",
+    "email": "emma.wilson@company.com",
+    "department": "Marketing"
+  },
+  {
+    "id": "user-6",
+    "name": "James Anderson",
+    "email": "james.anderson@company.com",
+    "department": "Sales"
+  },
+  {
+    "id": "user-7",
+    "name": "Olivia Taylor",
+    "email": "olivia.taylor@company.com",
+    "department": "HR"
+  },
+  {
+    "id": "user-8",
+    "name": "Daniel Thomas",
+    "email": "daniel.thomas@company.com",
+    "department": "Engineering"
+  },
+  {
+    "id": "user-9",
+    "name": "Emily Moore",
+    "email": "emily.moore@company.com",
+    "department": "Finance"
+  },
+  {
+    "id": "user-10",
+    "name": "William Jackson",
+    "email": "william.jackson@company.com",
+    "department": "Product"
+  },
+  {
+    "id": "user-11",
+    "name": "Sophia White",
+    "email": "sophia.white@company.com",
+    "department": "Design"
+  },
+  {
+    "id": "user-12",
+    "name": "Alexander Harris",
+    "email": "alexander.harris@company.com",
+    "department": "Sales"
+  }
+]

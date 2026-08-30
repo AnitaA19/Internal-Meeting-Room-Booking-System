@@ -1,0 +1,74 @@
+[
+  {
+    "id": "room-1",
+    "name": "Atlas",
+    "type": "meeting",
+    "capacity": 6,
+    "floor": 2,
+    "location": "East Wing",
+    "amenities": ["Whiteboard", "TV", "Video Conferencing"]
+  },
+  {
+    "id": "room-2",
+    "name": "Orion",
+    "type": "meeting",
+    "capacity": 8,
+    "floor": 2,
+    "location": "East Wing",
+    "amenities": ["Whiteboard", "TV", "Video Conferencing"]
+  },
+  {
+    "id": "room-3",
+    "name": "Apollo",
+    "type": "conference",
+    "capacity": 16,
+    "floor": 3,
+    "location": "Main Building",
+    "amenities": ["Projector", "Whiteboard", "Video Conferencing", "Microphone"]
+  },
+  {
+    "id": "room-4",
+    "name": "Mercury",
+    "type": "interview",
+    "capacity": 4,
+    "floor": 1,
+    "location": "West Wing",
+    "amenities": ["TV", "Video Conferencing"]
+  },
+  {
+    "id": "room-5",
+    "name": "Horizon",
+    "type": "training",
+    "capacity": 20,
+    "floor": 4,
+    "location": "Training Center",
+    "amenities": ["Projector", "Whiteboard", "Microphone", "Speakers"]
+  },
+  {
+    "id": "room-6",
+    "name": "Summit",
+    "type": "conference",
+    "capacity": 12,
+    "floor": 3,
+    "location": "Main Building",
+    "amenities": ["Projector", "TV", "Video Conferencing"]
+  },
+  {
+    "id": "room-7",
+    "name": "Nova",
+    "type": "meeting",
+    "capacity": 5,
+    "floor": 1,
+    "location": "West Wing",
+    "amenities": ["Whiteboard", "TV"]
+  },
+  {
+    "id": "room-8",
+    "name": "Focus",
+    "type": "interview",
+    "capacity": 3,
+    "floor": 1,
+    "location": "West Wing",
+    "amenities": ["TV", "Video Conferencing"]
+  }
+]
