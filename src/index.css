@@ -18,4 +18,9 @@
   body {
     @apply bg-bg font-sans text-white antialiased;
   }
+
+  select option {
+    background-color: #1c1c1e;
+    color: #ffffff;
+  }
 }

@@ -6,15 +6,21 @@ const dotColor: Record<BookingStatus, string> = {
   cancelled: "bg-subtle",
 };
 
+const statusText: Record<BookingStatus, string> = {
+  confirmed: "Confirmed",
+  pending: "Pending",
+  cancelled: "Cancelled",
+};
+
 type BookingStatusLabelProps = {
   status: BookingStatus;
 };
 
 export function BookingStatusLabel({ status }: BookingStatusLabelProps) {
   return (
-    <span className="inline-flex items-center gap-2 text-sm text-muted capitalize">
+    <span className="inline-flex items-center gap-2 text-sm text-muted">
       <span className={`size-2 rounded-full ${dotColor[status]}`} />
-      {status}
+      {statusText[status]}
     </span>
   );
 }

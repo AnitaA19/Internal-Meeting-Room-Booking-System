@@ -1,3 +1,21 @@
+export function formatDateHeading(date: Date): string {
+  return date
+    .toLocaleDateString("en-GB", {
+      weekday: "short",
+      day: "numeric",
+      month: "short",
+    })
+    .toUpperCase();
+}
+
+export function formatShortDate(date: Date): string {
+  return date.toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+  });
+}
+
 export function formatDashboardDate(date: Date): string {
   const day = date.toLocaleDateString("en-GB", {
     weekday: "short",

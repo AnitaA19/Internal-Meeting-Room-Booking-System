@@ -4,17 +4,20 @@ import { PageHeader } from "../../components/ui/PageHeader";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { roomRepository } from "../../lib/repositories";
 import { RoomCard } from "./components/RoomCard";
-import { filterRoomsByName } from "./filterRooms";
+import { RoomFiltersBar } from "./components/RoomFiltersBar";
+import { RoomSearch } from "./components/RoomSearch";
+import { applyRoomFilters, defaultRoomFilters, getRoomFloors } from "./filterRooms";
+import { searchRooms } from "./searchRooms";
 
 export function RoomsPage() {
-  const [search, setSearch] = useState("");
-  const rooms = roomRepository.getAllRooms();
-  const filteredRooms = filterRoomsByName(rooms, search);
+  const [query, setQuery] = useState("");
+  const [filters, setFilters] = useState(defaultRoomFilters);
 
-  const resultText =
-    search.trim().length > 0
-      ? `${filteredRooms.length} of ${rooms.length} rooms`
-      : `${rooms.length} rooms`;
+  const rooms = roomRepository.getAllRooms();
+  const filteredRooms = searchRooms(applyRoomFilters(rooms, filters), query);
+  const floors = getRoomFloors(rooms);
+
+  const resultText = `${filteredRooms.length} of ${rooms.length} rooms`;
 
   return (
     <>
@@ -24,13 +27,10 @@ export function RoomsPage() {
         aside={resultText}
       />
 
-      <input
-        type="search"
-        value={search}
-        onChange={(event) => setSearch(event.target.value)}
-        placeholder="Search by name"
-        className="mb-6 w-full rounded-xl bg-card px-4 py-3 text-sm placeholder:text-subtle focus:ring-1 focus:ring-white/20 focus:outline-none"
-      />
+      <div className="mb-6 flex flex-col gap-3">
+        <RoomSearch query={query} onChange={setQuery} />
+        <RoomFiltersBar filters={filters} floors={floors} onChange={setFilters} />
+      </div>
 
       {filteredRooms.length > 0 ? (
         <div className="grid gap-4 sm:grid-cols-2">
@@ -39,7 +39,7 @@ export function RoomsPage() {
           ))}
         </div>
       ) : (
-        <EmptyState message={`No rooms match "${search.trim()}".`} />
+        <EmptyState message="No rooms match your search or filters." />
       )}
     </>
   );
