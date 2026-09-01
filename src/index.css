@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: ui-sans-serif, system-ui, -apple-system, sans-serif;
+
+  --color-bg: #121212;
+  --color-card: #1c1c1e;
+  --color-elevated: #2c2c2e;
+  --color-muted: #a1a1aa;
+  --color-subtle: #71717a;
+  --color-brand: #b9d4b9;
+  --color-brand-dark: #1a2e1a;
+  --color-status-confirmed: #b9d4b9;
+  --color-status-pending: #d4a574;
+}
+
+@layer base {
+  body {
+    @apply bg-bg font-sans text-white antialiased;
+  }
+}

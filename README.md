@@ -1,75 +1,58 @@
-# React + TypeScript + Vite
+# Meeting Room Booking System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Internal web app for managing meeting room bookings. Built as a take-home assignment using React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## Current status
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Foundation is in place. Features will be built step by step.
 
-## React Compiler
+- [x] Project setup (Vite, React, TypeScript)
+- [x] Seed data (rooms, employees, bookings)
+- [x] Data layer with repositories + localStorage persistence
+- [x] App shell with routing and layout
+- [ ] Rooms page (search, filter, details)
+- [ ] Schedule page (daily / weekly views)
+- [ ] Bookings CRUD (create, edit, cancel)
+- [ ] URL state for filters and views
+- [ ] Deploy to Vercel
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Tech stack
 
-## Expanding the ESLint configuration
+- **React 19** + **TypeScript**
+- **Tailwind CSS** — styling
+- **React Router** — routing and URL state
+- **Zustand** — state management (to be wired up)
+- **date-fns** — date utilities
+- **localStorage** — persistence for user changes
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Getting started
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Project structure
 
 ```
+src/
+├── app/              # Router
+├── components/       # Shared layout + UI
+├── config/           # App config (navigation)
+├── data/             # Seed JSON
+├── features/         # Feature modules (page, components, repository)
+│   ├── bookings/
+│   ├── dashboard/
+│   ├── employees/
+│   ├── rooms/
+│   └── schedule/
+└── lib/              # Shared utilities
+```
+
+## Data layer
+
+Repositories abstract the data source so JSON files can be swapped for a real API later:
+
+- `roomRepository` — read rooms from JSON
+- `employeeRepository` — read employees from JSON
+- `bookingRepository` — read/write bookings (JSON seed + localStorage)
