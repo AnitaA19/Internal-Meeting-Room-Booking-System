@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import { PageHeader } from "../../components/ui/PageHeader";
 import { EmptyState } from "../../components/ui/EmptyState";
+import { cancelBookingAction } from "./cancelBooking";
 import { BookingDateGroup } from "./components/BookingDateGroup";
 import { BookingFiltersBar } from "./components/BookingFiltersBar";
 import { BookingSearch } from "./components/BookingSearch";
@@ -14,14 +15,26 @@ import { searchBookings } from "./searchBookings";
 export function BookingsPage() {
   const [query, setQuery] = useState("");
   const [filters, setFilters] = useState(defaultBookingFilters);
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  const { bookings, roomById, employeeById } = getBookingsPageData();
+  const { bookings, roomById, employeeById } = useMemo(
+    () => getBookingsPageData(),
+    [refreshKey],
+  );
   const filteredBookings = searchBookings(
     applyBookingFilters(bookings, filters),
     query,
     { roomById, employeeById },
   );
   const dayGroups = groupBookingsByDate(filteredBookings);
+
+  function handleCancel(bookingId: string) {
+    const result = cancelBookingAction(bookingId);
+
+    if (result.success) {
+      setRefreshKey((current) => current + 1);
+    }
+  }
 
   return (
     <>
@@ -32,10 +45,7 @@ export function BookingsPage() {
       />
 
       <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
-        <Link
-          to="/bookings/new"
-          className="inline-flex shrink-0 items-center justify-center rounded-full bg-brand px-4 py-2 text-sm font-medium text-brand-dark"
-        >
+        <Link to="/bookings/new" className="btn-primary shrink-0 px-4">
           New booking
         </Link>
         <div className="flex-1">
@@ -52,6 +62,7 @@ export function BookingsPage() {
               bookings={group.bookings}
               roomById={roomById}
               employeeById={employeeById}
+              onCancel={handleCancel}
             />
           ))}
         </div>

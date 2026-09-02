@@ -1,6 +1,7 @@
 import type { Booking } from "../types/booking";
 import type { Employee } from "../../employees/types/employee";
 import type { Room } from "../../rooms/types/room";
+import { isCancellable } from "../cancelBooking";
 import { BookingStatusLabel } from "./BookingStatusLabel";
 import { formatTime } from "../../../lib/formatDate";
 import { formatShortName } from "../../../lib/formatName";
@@ -9,11 +10,13 @@ type BookingRowProps = {
   booking: Booking;
   room?: Room;
   organizer?: Employee;
+  onCancel: (bookingId: string) => void;
 };
 
-export function BookingRow({ booking, room, organizer }: BookingRowProps) {
+export function BookingRow({ booking, room, organizer, onCancel }: BookingRowProps) {
   const attendeeCount = booking.participantIds.length;
   const organizerName = organizer ? formatShortName(organizer.name) : "Unknown";
+  const canCancel = isCancellable(booking);
 
   return (
     <div className="grid grid-cols-[4.5rem_1fr_10rem_auto] items-center gap-6 border-b border-white/5 px-6 py-5 last:border-b-0">
@@ -39,7 +42,18 @@ export function BookingRow({ booking, room, organizer }: BookingRowProps) {
         )}
       </div>
 
-      <BookingStatusLabel status={booking.status} />
+      <div className="flex items-center gap-3">
+        <BookingStatusLabel status={booking.status} />
+        {canCancel && (
+          <button
+            type="button"
+            onClick={() => onCancel(booking.id)}
+            className="action-cancel"
+          >
+            Cancel
+          </button>
+        )}
+      </div>
     </div>
   );
 }

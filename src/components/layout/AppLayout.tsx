@@ -31,12 +31,7 @@ export function AppLayout() {
                 to={item.to}
                 end={item.end}
                 className={({ isActive }) =>
-                  [
-                    "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium",
-                    isActive
-                      ? "bg-elevated text-white"
-                      : "text-muted hover:bg-elevated/60 hover:text-white",
-                  ].join(" ")
+                  isActive ? "nav-link-active" : "nav-link-idle"
                 }
               >
                 <Icon className="size-4 shrink-0" strokeWidth={1.75} />

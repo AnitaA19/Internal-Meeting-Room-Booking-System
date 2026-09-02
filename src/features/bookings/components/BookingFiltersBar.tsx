@@ -14,25 +14,19 @@ type BookingFiltersBarProps = {
 
 export function BookingFiltersBar({ filters, onChange }: BookingFiltersBarProps) {
   return (
-    <div className="flex flex-wrap gap-2">
-      {statusFilters.map((option) => {
-        const isActive = filters.status === option.value;
-
-        return (
-          <button
-            key={option.value}
-            type="button"
-            onClick={() => onChange({ status: option.value })}
-            className={
-              isActive
-                ? "rounded-full bg-brand px-4 py-1.5 text-sm font-medium text-brand-dark"
-                : "rounded-full px-4 py-1.5 text-sm font-medium text-muted hover:text-white"
-            }
-          >
-            {option.label}
-          </button>
-        );
-      })}
+    <div className="filter-group">
+      {statusFilters.map((option) => (
+        <button
+          key={option.value}
+          type="button"
+          onClick={() => onChange({ status: option.value })}
+          className={
+            filters.status === option.value ? "filter-pill-active" : "filter-pill"
+          }
+        >
+          {option.label}
+        </button>
+      ))}
     </div>
   );
 }

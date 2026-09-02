@@ -11,7 +11,7 @@ export function SearchInput({ value, onChange, placeholder }: SearchInputProps) 
       value={value}
       onChange={(event) => onChange(event.target.value)}
       placeholder={placeholder}
-      className="w-full rounded-xl border border-white/5 bg-card px-4 py-3 text-sm placeholder:text-subtle focus:border-white/10 focus:ring-0 focus:outline-none"
+      className="control"
     />
   );
 }

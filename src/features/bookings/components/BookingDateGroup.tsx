@@ -9,6 +9,7 @@ type BookingDateGroupProps = {
   bookings: Booking[];
   roomById: Map<string, Room>;
   employeeById: Map<string, Employee>;
+  onCancel: (bookingId: string) => void;
 };
 
 export function BookingDateGroup({
@@ -16,6 +17,7 @@ export function BookingDateGroup({
   bookings,
   roomById,
   employeeById,
+  onCancel,
 }: BookingDateGroupProps) {
   return (
     <section>
@@ -34,6 +36,7 @@ export function BookingDateGroup({
               booking={booking}
               room={roomById.get(booking.roomId)}
               organizer={employeeById.get(booking.userId)}
+              onCancel={onCancel}
             />
           ))}
         </div>

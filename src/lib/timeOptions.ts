@@ -16,7 +16,7 @@ export function getTimeOptions(): { value: string; label: string }[] {
   return options;
 }
 
-function formatTimeLabel(time24: string): string {
+export function formatTimeLabel(time24: string): string {
   const [hours, minutes] = time24.split(":").map(Number);
   const date = new Date();
   date.setHours(hours, minutes, 0, 0);
@@ -35,4 +35,14 @@ export function getNextTimeSlot(time24: string): string | undefined {
   const index = options.findIndex((option) => option.value === time24);
 
   return options[index + 1]?.value;
+}
+
+export function getTimeOptionsAfter(minTime?: string): { value: string; label: string }[] {
+  const options = getTimeOptions();
+
+  if (!minTime) {
+    return options;
+  }
+
+  return options.filter((option) => option.value > minTime);
 }

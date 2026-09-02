@@ -10,7 +10,7 @@ export function CreateBookingPage() {
         title="New booking"
         subtitle="Reserve a room for your meeting."
         actions={
-          <Link to="/bookings" className="text-sm text-muted hover:text-white">
+          <Link to="/bookings" className="action-link">
             Back to bookings
           </Link>
         }

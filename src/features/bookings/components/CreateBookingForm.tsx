@@ -2,27 +2,19 @@ import { useState, type FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { DateField } from "../../../components/ui/DateField";
-import { fieldClassName, FormField } from "../../../components/ui/FormField";
+import { FormField } from "../../../components/ui/FormField";
 import { SelectField } from "../../../components/ui/SelectField";
-import { TimeSelect } from "../../../components/ui/TimeSelect";
+import { TimePicker } from "../../../components/ui/TimePicker";
+import { toIsoDate } from "../../../lib/formatDate";
 import { getNextTimeSlot } from "../../../lib/timeOptions";
 import { employeeRepository, roomRepository } from "../../../lib/repositories";
 import { createBooking, type CreateBookingInput } from "../createBooking";
-
-function getDefaultDate(): string {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, "0");
-  const day = String(today.getDate()).padStart(2, "0");
-
-  return `${year}-${month}-${day}`;
-}
 
 const emptyForm: CreateBookingInput = {
   title: "",
   roomId: "",
   userId: "",
-  date: getDefaultDate(),
+  date: toIsoDate(new Date()),
   startTime: "09:00",
   endTime: "10:00",
 };
@@ -78,7 +70,7 @@ export function CreateBookingForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="rounded-xl bg-card p-6">
+    <form onSubmit={handleSubmit} className="rounded-xl border border-white/5 bg-card p-6">
       <div className="flex flex-col gap-5">
         <FormField label="Meeting title">
           <input
@@ -86,7 +78,7 @@ export function CreateBookingForm() {
             value={form.title}
             onChange={(event) => updateField("title", event.target.value)}
             placeholder="e.g. Product sync"
-            className={fieldClassName}
+            className="control"
           />
         </FormField>
 
@@ -112,11 +104,15 @@ export function CreateBookingForm() {
 
         <div className="grid gap-5 sm:grid-cols-2">
           <FormField label="Start">
-            <TimeSelect value={form.startTime} onChange={handleStartTimeChange} />
+            <TimePicker value={form.startTime} onChange={handleStartTimeChange} />
           </FormField>
 
           <FormField label="End">
-            <TimeSelect value={form.endTime} onChange={(endTime) => updateField("endTime", endTime)} />
+            <TimePicker
+              value={form.endTime}
+              onChange={(endTime) => updateField("endTime", endTime)}
+              minTime={form.startTime}
+            />
           </FormField>
         </div>
       </div>
@@ -124,17 +120,10 @@ export function CreateBookingForm() {
       {error && <p className="mt-4 text-sm text-status-pending">{error}</p>}
 
       <div className="mt-6 flex gap-3">
-        <button
-          type="submit"
-          className="rounded-full bg-brand px-5 py-2 text-sm font-medium text-brand-dark"
-        >
+        <button type="submit" className="btn-primary">
           Create booking
         </button>
-        <button
-          type="button"
-          onClick={() => navigate("/bookings")}
-          className="rounded-full px-5 py-2 text-sm font-medium text-muted hover:text-white"
-        >
+        <button type="button" onClick={() => navigate("/bookings")} className="btn-ghost">
           Cancel
         </button>
       </div>

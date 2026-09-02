@@ -13,6 +13,3 @@ export function FormField({ label, children }: FormFieldProps) {
     </label>
   );
 }
-
-export const fieldClassName =
-  "w-full rounded-xl border border-white/5 bg-card px-4 py-3 text-sm text-white placeholder:text-subtle focus:border-white/10 focus:ring-0 focus:outline-none";
