@@ -8,6 +8,16 @@ export const defaultBookingFilters: BookingFilters = {
   status: "all",
 };
 
+const bookingStatuses: BookingStatus[] = ["confirmed", "pending", "cancelled"];
+
+export function parseBookingStatus(value: string | null): BookingFilters["status"] {
+  if (value && bookingStatuses.includes(value as BookingStatus)) {
+    return value as BookingStatus;
+  }
+
+  return "all";
+}
+
 export function applyBookingFilters(
   bookings: Booking[],
   filters: BookingFilters,

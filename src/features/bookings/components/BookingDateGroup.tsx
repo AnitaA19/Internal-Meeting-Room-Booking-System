@@ -29,7 +29,7 @@ export function BookingDateGroup({
       </div>
 
       <div className="overflow-x-auto rounded-xl bg-card">
-        <div className="min-w-[640px]">
+        <div className="min-w-[52rem]">
           {bookings.map((booking) => (
             <BookingRow
               key={booking.id}

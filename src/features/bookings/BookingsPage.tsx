@@ -3,19 +3,29 @@ import { Link } from "react-router-dom";
 
 import { PageHeader } from "../../components/ui/PageHeader";
 import { EmptyState } from "../../components/ui/EmptyState";
+import { useQueryParams } from "../../lib/useQueryParams";
 import { cancelBookingAction } from "./cancelBooking";
 import { BookingDateGroup } from "./components/BookingDateGroup";
 import { BookingFiltersBar } from "./components/BookingFiltersBar";
 import { BookingSearch } from "./components/BookingSearch";
-import { applyBookingFilters, defaultBookingFilters } from "./filterBookings";
+import {
+  applyBookingFilters,
+  defaultBookingFilters,
+  parseBookingStatus,
+  type BookingFilters,
+} from "./filterBookings";
 import { getBookingsPageData } from "./getBookingsPageData";
 import { groupBookingsByDate } from "./groupBookingsByDate";
 import { searchBookings } from "./searchBookings";
 
 export function BookingsPage() {
-  const [query, setQuery] = useState("");
-  const [filters, setFilters] = useState(defaultBookingFilters);
+  const [searchParams, updateParams] = useQueryParams();
   const [refreshKey, setRefreshKey] = useState(0);
+
+  const query = searchParams.get("q") ?? "";
+  const filters: BookingFilters = {
+    status: parseBookingStatus(searchParams.get("status")),
+  };
 
   const { bookings, roomById, employeeById } = useMemo(
     () => getBookingsPageData(),
@@ -27,6 +37,26 @@ export function BookingsPage() {
     { roomById, employeeById },
   );
   const dayGroups = groupBookingsByDate(filteredBookings);
+
+  function setQuery(nextQuery: string) {
+    updateParams((params) => {
+      if (nextQuery) {
+        params.set("q", nextQuery);
+      } else {
+        params.delete("q");
+      }
+    });
+  }
+
+  function setFilters(nextFilters: BookingFilters) {
+    updateParams((params) => {
+      if (nextFilters.status === defaultBookingFilters.status) {
+        params.delete("status");
+      } else {
+        params.set("status", nextFilters.status);
+      }
+    });
+  }
 
   function handleCancel(bookingId: string) {
     const result = cancelBookingAction(bookingId);

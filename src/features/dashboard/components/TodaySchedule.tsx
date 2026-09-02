@@ -25,7 +25,7 @@ export function TodaySchedule({
 
       {bookings.length > 0 ? (
         <div className="overflow-x-auto">
-          <div className="min-w-[640px]">
+          <div className="min-w-[52rem]">
             {bookings.map((booking) => (
               <ScheduleRow
                 key={booking.id}

@@ -10,6 +10,26 @@ export const defaultRoomFilters: RoomFilters = {
   floor: "all",
 };
 
+const roomTypes: RoomType[] = ["meeting", "conference", "interview", "training"];
+
+export function parseRoomType(value: string | null): RoomFilters["type"] {
+  if (value && roomTypes.includes(value as RoomType)) {
+    return value as RoomType;
+  }
+
+  return "all";
+}
+
+export function parseRoomFloor(value: string | null): RoomFilters["floor"] {
+  if (!value || value === "all") {
+    return "all";
+  }
+
+  const floor = Number(value);
+
+  return Number.isFinite(floor) ? floor : "all";
+}
+
 export function applyRoomFilters(rooms: Room[], filters: RoomFilters): Room[] {
   return rooms.filter((room) => {
     if (filters.type !== "all" && room.type !== filters.type) {

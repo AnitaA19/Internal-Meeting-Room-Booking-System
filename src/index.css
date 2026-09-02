@@ -113,4 +113,49 @@
   .time-slot-active {
     @apply cursor-pointer rounded-lg border border-brand/40 bg-brand/20 px-2 py-2 text-center text-xs font-medium text-brand;
   }
+
+  .schedule-time-header,
+  .schedule-room-row {
+    @apply grid border-b border-white/5;
+    grid-template-columns: 10rem minmax(52rem, 1fr);
+  }
+
+  .schedule-room-label {
+    @apply flex flex-col justify-center border-r border-white/5 px-4 py-4;
+  }
+
+  .schedule-timeline {
+    @apply relative grid min-h-16;
+    grid-template-columns: repeat(var(--schedule-cols, 13), minmax(4rem, 1fr));
+  }
+
+  .schedule-hour {
+    @apply shrink-0 border-r border-white/5 px-2 py-3 text-xs whitespace-nowrap text-muted last:border-r-0;
+  }
+
+  .schedule-block {
+    @apply absolute top-2 bottom-2 cursor-pointer overflow-hidden rounded-md border border-brand/30 bg-brand/15 px-2 py-1 transition-colors hover:bg-brand/25;
+  }
+
+  .action-edit {
+    @apply cursor-pointer rounded-md border border-white/10 px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:border-brand/50 hover:bg-brand/10 hover:text-brand;
+  }
+
+  .list-row {
+    @apply grid items-center gap-x-6 border-b border-white/5 px-6 last:border-b-0;
+    grid-template-columns: 4.5rem minmax(0, 1fr) 11rem 14rem;
+  }
+
+  .list-row-compact {
+    @apply grid items-center gap-x-6 border-b border-white/5 px-6 py-4 last:border-b-0;
+    grid-template-columns: 4.5rem minmax(0, 1fr) 11rem 6.5rem;
+  }
+
+  .list-row-actions {
+    @apply flex items-center gap-3;
+  }
+
+  .list-row-action-buttons {
+    @apply ml-auto flex shrink-0 gap-3;
+  }
 }

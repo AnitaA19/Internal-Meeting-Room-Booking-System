@@ -1,23 +1,65 @@
-import { useState } from "react";
+import { useMemo } from "react";
 
 import { PageHeader } from "../../components/ui/PageHeader";
 import { EmptyState } from "../../components/ui/EmptyState";
+import { useQueryParams } from "../../lib/useQueryParams";
 import { roomRepository } from "../../lib/repositories";
 import { RoomCard } from "./components/RoomCard";
 import { RoomFiltersBar } from "./components/RoomFiltersBar";
 import { RoomSearch } from "./components/RoomSearch";
-import { applyRoomFilters, defaultRoomFilters, getRoomFloors } from "./filterRooms";
+import {
+  applyRoomFilters,
+  defaultRoomFilters,
+  getRoomFloors,
+  parseRoomFloor,
+  parseRoomType,
+  type RoomFilters,
+} from "./filterRooms";
 import { searchRooms } from "./searchRooms";
 
 export function RoomsPage() {
-  const [query, setQuery] = useState("");
-  const [filters, setFilters] = useState(defaultRoomFilters);
+  const [searchParams, updateParams] = useQueryParams();
+
+  const query = searchParams.get("q") ?? "";
+  const filters: RoomFilters = {
+    type: parseRoomType(searchParams.get("type")),
+    floor: parseRoomFloor(searchParams.get("floor")),
+  };
 
   const rooms = roomRepository.getAllRooms();
-  const filteredRooms = searchRooms(applyRoomFilters(rooms, filters), query);
+  const filteredRooms = useMemo(
+    () => searchRooms(applyRoomFilters(rooms, filters), query),
+    [rooms, filters, query],
+  );
   const floors = getRoomFloors(rooms);
 
   const resultText = `${filteredRooms.length} of ${rooms.length} rooms`;
+
+  function setQuery(nextQuery: string) {
+    updateParams((params) => {
+      if (nextQuery) {
+        params.set("q", nextQuery);
+      } else {
+        params.delete("q");
+      }
+    });
+  }
+
+  function setFilters(nextFilters: RoomFilters) {
+    updateParams((params) => {
+      if (nextFilters.type === defaultRoomFilters.type) {
+        params.delete("type");
+      } else {
+        params.set("type", nextFilters.type);
+      }
+
+      if (nextFilters.floor === defaultRoomFilters.floor) {
+        params.delete("floor");
+      } else {
+        params.set("floor", String(nextFilters.floor));
+      }
+    });
+  }
 
   return (
     <>
