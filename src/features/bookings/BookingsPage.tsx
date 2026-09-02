@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 import { PageHeader } from "../../components/ui/PageHeader";
 import { EmptyState } from "../../components/ui/EmptyState";
@@ -30,8 +31,16 @@ export function BookingsPage() {
         actions={<BookingFiltersBar filters={filters} onChange={setFilters} />}
       />
 
-      <div className="mb-6">
-        <BookingSearch query={query} onChange={setQuery} />
+      <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center">
+        <Link
+          to="/bookings/new"
+          className="inline-flex shrink-0 items-center justify-center rounded-full bg-brand px-4 py-2 text-sm font-medium text-brand-dark"
+        >
+          New booking
+        </Link>
+        <div className="flex-1">
+          <BookingSearch query={query} onChange={setQuery} />
+        </div>
       </div>
 
       {dayGroups.length > 0 ? (

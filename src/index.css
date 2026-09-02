@@ -23,4 +23,17 @@
     background-color: #1c1c1e;
     color: #ffffff;
   }
+
+  .date-input {
+    color-scheme: dark;
+  }
+
+  .date-input::-webkit-calendar-picker-indicator {
+    position: absolute;
+    right: 0;
+    width: 2.5rem;
+    height: 100%;
+    cursor: pointer;
+    opacity: 0;
+  }
 }
