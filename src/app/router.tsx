@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import { AppLayout } from "../components/layout/AppLayout";
+import { BookingDetailPage } from "../features/bookings/BookingDetailPage";
 import { BookingsPage } from "../features/bookings/BookingsPage";
 import { CreateBookingPage } from "../features/bookings/CreateBookingPage";
 import { EditBookingPage } from "../features/bookings/EditBookingPage";
@@ -22,6 +23,7 @@ export const router = createBrowserRouter([
       { path: "bookings", element: <BookingsPage /> },
       { path: "bookings/new", element: <CreateBookingPage /> },
       { path: "bookings/:id/edit", element: <EditBookingPage /> },
+      { path: "bookings/:id", element: <BookingDetailPage /> },
       { path: "*", element: <NotFoundPage /> },
     ],
   },

@@ -1,13 +1,12 @@
 export const SCHEDULE_START_HOUR = 8;
-export const SCHEDULE_END_HOUR = 20;
-export const SCHEDULE_HOUR_COUNT = SCHEDULE_END_HOUR - SCHEDULE_START_HOUR + 1;
+export const SCHEDULE_END_HOUR = 18;
 
-export function getScheduleHours(): number[] {
-  const hours: number[] = [];
+export const SCHEDULE_SLOT_COUNT = SCHEDULE_END_HOUR - SCHEDULE_START_HOUR;
 
-  for (let hour = SCHEDULE_START_HOUR; hour <= SCHEDULE_END_HOUR; hour++) {
-    hours.push(hour);
-  }
+export function getScheduleSlotHours(): number[] {
+  return Array.from({ length: SCHEDULE_SLOT_COUNT }, (_, index) => SCHEDULE_START_HOUR + index);
+}
 
-  return hours;
+export function getScheduleHourLabels(): number[] {
+  return Array.from({ length: SCHEDULE_SLOT_COUNT + 1 }, (_, index) => SCHEDULE_START_HOUR + index);
 }

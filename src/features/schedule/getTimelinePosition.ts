@@ -18,3 +18,13 @@ export function getTimelinePosition(startTime: Date, endTime: Date) {
     width: (duration / totalMinutes) * 100,
   };
 }
+
+export function getNowLinePercent(now = new Date()): number | null {
+  const minutes = toMinutes(now);
+
+  if (minutes < scheduleStartMinutes || minutes > scheduleEndMinutes) {
+    return null;
+  }
+
+  return ((minutes - scheduleStartMinutes) / totalMinutes) * 100;
+}

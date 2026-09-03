@@ -8,24 +8,21 @@ import { formatTime, toIsoDate } from "../../lib/formatDate";
 import { roomRepository } from "../../lib/repositories";
 import { useBookingStore } from "../../store/bookingStore";
 import { BookingStatusLabel } from "../bookings/components/BookingStatusLabel";
-
-const roomTypeNames = {
-  meeting: "Meeting room",
-  conference: "Conference",
-  interview: "Interview",
-  training: "Training",
-} as const;
+import { getRoomOccupancy } from "./getRoomOccupancy";
+import { roomTypeLabels } from "./roomLabels";
 
 export function RoomDetailPage() {
   const { id } = useParams();
   const bookings = useBookingStore((state) => state.bookings);
-  const room = roomRepository.getAllRooms().find((entry) => entry.id === id);
+  const room = id ? roomRepository.getRoomById(id) : undefined;
   const today = toIsoDate(new Date());
 
   if (!room) {
     return <Navigate to="/rooms" replace />;
   }
 
+  const occupancy = getRoomOccupancy(room, bookings);
+  const canBook = occupancy !== "maintenance";
   const roomBookings = bookings
     .filter(
       (booking) =>
@@ -42,7 +39,7 @@ export function RoomDetailPage() {
         subtitle={`Floor ${room.floor} · ${room.location}`}
         actions={
           <Link to="/rooms" className="action-link">
-            Back to rooms
+            All rooms
           </Link>
         }
       />
@@ -50,15 +47,24 @@ export function RoomDetailPage() {
       <div className="mb-8 rounded-xl border border-white/5 bg-card p-6">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <p className="text-sm text-muted">{roomTypeNames[room.type]}</p>
+            <p className="text-sm text-muted">{roomTypeLabels[room.type]}</p>
             <p className="mt-1 text-sm text-muted">Up to {room.capacity} people</p>
           </div>
-          <Link
-            to={buildNewBookingUrl({ roomId: room.id, date: today, start: "09:00", end: "10:00" })}
-            className="btn-primary"
-          >
-            Book this room
-          </Link>
+          {canBook ? (
+            <Link
+              to={buildNewBookingUrl({
+                roomId: room.id,
+                date: today,
+                start: "09:00",
+                end: "10:00",
+              })}
+              className="btn-primary"
+            >
+              Book this room
+            </Link>
+          ) : (
+            <span className="room-badge-down">Maintenance</span>
+          )}
         </div>
 
         <ul className="mt-5 flex flex-wrap gap-2">
@@ -82,9 +88,10 @@ export function RoomDetailPage() {
         {roomBookings.length > 0 ? (
           <div className="rounded-xl bg-card">
             {roomBookings.map((booking) => (
-              <div
+              <Link
                 key={booking.id}
-                className="flex items-center justify-between gap-4 border-b border-white/5 px-6 py-4 last:border-b-0"
+                to={`/bookings/${booking.id}`}
+                className="flex items-center justify-between gap-4 border-b border-white/5 px-5 py-4 last:border-b-0 hover:bg-white/[0.02]"
               >
                 <div className="min-w-0">
                   <p className="truncate font-medium">{booking.title}</p>
@@ -92,18 +99,12 @@ export function RoomDetailPage() {
                     {formatTime(booking.startTime)} – {formatTime(booking.endTime)}
                   </p>
                 </div>
-
-                <div className="flex items-center gap-3">
-                  <BookingStatusLabel status={booking.status} />
-                  <Link to={`/bookings/${booking.id}/edit`} className="action-edit">
-                    Edit
-                  </Link>
-                </div>
-              </div>
+                <BookingStatusLabel status={booking.status} />
+              </Link>
             ))}
           </div>
         ) : (
-          <EmptyState message="No meetings in this room today." />
+          <EmptyState message="Nothing booked in here today." />
         )}
       </section>
     </>

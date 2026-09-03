@@ -9,12 +9,17 @@ class RoomRepository {
       (room): Room => ({
         ...room,
         type: room.type as Room["type"],
+        status: room.status === "maintenance" ? "maintenance" : "open",
       }),
     );
   }
 
   getAllRooms(): Room[] {
     return this.rooms;
+  }
+
+  getRoomById(id: string): Room | undefined {
+    return this.rooms.find((room) => room.id === id);
   }
 }
 

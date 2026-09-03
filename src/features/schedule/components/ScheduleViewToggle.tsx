@@ -1,6 +1,8 @@
+import type { ScheduleView } from "../parseScheduleView";
+
 type ScheduleViewToggleProps = {
-  view: "daily" | "weekly";
-  onChange: (view: "daily" | "weekly") => void;
+  view: ScheduleView;
+  onChange: (view: ScheduleView) => void;
 };
 
 export function ScheduleViewToggle({ view, onChange }: ScheduleViewToggleProps) {
@@ -22,8 +24,4 @@ export function ScheduleViewToggle({ view, onChange }: ScheduleViewToggleProps) 
       </button>
     </div>
   );
-}
-
-export function parseScheduleView(value: string | null): "daily" | "weekly" {
-  return value === "weekly" ? "weekly" : "daily";
 }

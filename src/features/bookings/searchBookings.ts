@@ -24,6 +24,7 @@ export function searchBookings(
 
     return (
       booking.title.toLowerCase().includes(trimmed) ||
+      booking.notes?.toLowerCase().includes(trimmed) ||
       room?.name.toLowerCase().includes(trimmed) ||
       organizer?.name.toLowerCase().includes(trimmed)
     );

@@ -10,7 +10,7 @@ type PageHeaderProps = {
 export function PageHeader({ title, subtitle, aside, actions }: PageHeaderProps) {
   return (
     <header className="mb-6">
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
           {subtitle && <p className="mt-1 text-sm text-muted">{subtitle}</p>}

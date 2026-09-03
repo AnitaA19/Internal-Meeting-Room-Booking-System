@@ -3,25 +3,19 @@ import { Link } from "react-router-dom";
 import { buildNewBookingUrl } from "../../../lib/bookingPrefill";
 import { getNextTimeSlot } from "../../../lib/timeOptions";
 import type { Booking } from "../../bookings/types/booking";
-import type { Employee } from "../../employees/types/employee";
 import type { Room } from "../../rooms/types/room";
-import { getScheduleHours } from "../scheduleConstants";
+import { getScheduleSlotHours } from "../scheduleConstants";
 import { ScheduleBookingBlock } from "./ScheduleBookingBlock";
 
 type ScheduleRoomRowProps = {
   room: Room;
   isoDate: string;
   bookings: Booking[];
-  employeeById: Map<string, Employee>;
 };
 
-export function ScheduleRoomRow({
-  room,
-  isoDate,
-  bookings,
-  employeeById,
-}: ScheduleRoomRowProps) {
-  const hours = getScheduleHours();
+export function ScheduleRoomRow({ room, isoDate, bookings }: ScheduleRoomRowProps) {
+  const hours = getScheduleSlotHours();
+  const booked = bookings.filter((booking) => booking.status !== "cancelled").length;
 
   return (
     <div className="schedule-room-row">
@@ -30,7 +24,7 @@ export function ScheduleRoomRow({
           {room.name}
         </Link>
         <p className="truncate text-xs text-muted">
-          Floor {room.floor} · {room.capacity} seats
+          {room.capacity} seats · {booked} booked
         </p>
       </div>
 
@@ -54,11 +48,7 @@ export function ScheduleRoomRow({
         })}
 
         {bookings.map((booking) => (
-          <ScheduleBookingBlock
-            key={booking.id}
-            booking={booking}
-            organizer={employeeById.get(booking.userId)}
-          />
+          <ScheduleBookingBlock key={booking.id} booking={booking} />
         ))}
       </div>
     </div>

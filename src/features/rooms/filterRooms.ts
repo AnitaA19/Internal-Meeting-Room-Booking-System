@@ -1,13 +1,17 @@
 import type { Room, RoomType } from "./types/room";
 
+export type CapacityBucket = "all" | "small" | "medium" | "large";
+
 export type RoomFilters = {
   type: RoomType | "all";
   floor: number | "all";
+  capacity: CapacityBucket;
 };
 
 export const defaultRoomFilters: RoomFilters = {
   type: "all",
   floor: "all",
+  capacity: "all",
 };
 
 const roomTypes: RoomType[] = ["meeting", "conference", "interview", "training"];
@@ -30,6 +34,30 @@ export function parseRoomFloor(value: string | null): RoomFilters["floor"] {
   return Number.isFinite(floor) ? floor : "all";
 }
 
+export function parseCapacityBucket(value: string | null): CapacityBucket {
+  if (value === "small" || value === "medium" || value === "large") {
+    return value;
+  }
+
+  return "all";
+}
+
+function matchesCapacity(capacity: number, bucket: CapacityBucket): boolean {
+  if (bucket === "all") {
+    return true;
+  }
+
+  if (bucket === "small") {
+    return capacity <= 4;
+  }
+
+  if (bucket === "medium") {
+    return capacity >= 5 && capacity <= 10;
+  }
+
+  return capacity >= 11;
+}
+
 export function applyRoomFilters(rooms: Room[], filters: RoomFilters): Room[] {
   return rooms.filter((room) => {
     if (filters.type !== "all" && room.type !== filters.type) {
@@ -40,7 +68,7 @@ export function applyRoomFilters(rooms: Room[], filters: RoomFilters): Room[] {
       return false;
     }
 
-    return true;
+    return matchesCapacity(room.capacity, filters.capacity);
   });
 }
 

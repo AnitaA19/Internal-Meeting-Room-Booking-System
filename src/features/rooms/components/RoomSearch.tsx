@@ -6,5 +6,5 @@ type RoomSearchProps = {
 };
 
 export function RoomSearch({ query, onChange }: RoomSearchProps) {
-  return <SearchInput value={query} onChange={onChange} placeholder="Search by name" />;
+  return <SearchInput value={query} onChange={onChange} placeholder="Name, floor, or amenity" />;
 }

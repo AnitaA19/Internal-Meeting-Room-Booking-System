@@ -66,8 +66,13 @@
     @apply cursor-pointer text-sm text-muted transition-colors hover:text-white;
   }
 
+  .action-cancel,
+  .action-edit {
+    @apply inline-flex h-7 cursor-pointer items-center justify-center rounded-md border border-white/10 px-2.5 text-xs font-medium text-muted transition-colors;
+  }
+
   .action-cancel {
-    @apply cursor-pointer rounded-md border border-white/10 px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:border-status-pending/50 hover:bg-status-pending/10 hover:text-status-pending;
+    @apply hover:border-status-pending/50 hover:bg-status-pending/10 hover:text-status-pending;
   }
 
   .nav-link {
@@ -116,29 +121,46 @@
 
   .schedule-time-header,
   .schedule-room-row {
-    @apply grid border-b border-white/5;
-    grid-template-columns: 10rem minmax(52rem, 1fr);
+    @apply grid border-b border-white/5 last:border-b-0;
+    grid-template-columns: 12rem minmax(44rem, 1fr);
   }
 
   .schedule-room-label {
-    @apply flex flex-col justify-center border-r border-white/5 px-4 py-4;
+    @apply flex flex-col justify-center border-r border-white/5 px-4 py-3;
   }
 
   .schedule-timeline {
-    @apply relative grid min-h-16;
-    grid-template-columns: repeat(var(--schedule-cols, 13), minmax(4rem, 1fr));
+    @apply relative grid min-h-[4.5rem];
+    grid-template-columns: repeat(var(--schedule-cols, 10), minmax(2.5rem, 1fr));
   }
 
-  .schedule-hour {
-    @apply shrink-0 border-r border-white/5 px-2 py-3 text-xs whitespace-nowrap text-muted last:border-r-0;
+  .schedule-hour-labels {
+    @apply relative min-h-10;
   }
 
-  .schedule-block {
-    @apply absolute top-2 bottom-2 z-10 cursor-pointer overflow-hidden rounded-md border border-brand/30 bg-brand/15 px-2 py-1 transition-colors hover:bg-brand/25;
+  .schedule-now {
+    @apply pointer-events-none absolute top-0 bottom-0 z-20 w-px bg-white/70;
+  }
+
+  .schedule-now-pill {
+    @apply absolute top-2 left-1/2 -translate-x-1/2 rounded-full bg-brand px-1.5 py-px text-[10px] font-medium text-brand-dark;
+  }
+
+  .schedule-block-confirmed,
+  .schedule-block-pending {
+    @apply absolute top-2 bottom-2 z-10 cursor-pointer overflow-hidden rounded-lg px-2 py-1.5;
+  }
+
+  .schedule-block-confirmed {
+    @apply border border-brand/20 bg-brand text-brand-dark hover:bg-brand/90;
+  }
+
+  .schedule-block-pending {
+    @apply border border-dashed border-status-pending/80 bg-status-pending/10 text-status-pending hover:bg-status-pending/15;
   }
 
   .schedule-slot {
-    @apply block min-h-16 border-r border-white/5 transition-colors last:border-r-0 hover:bg-white/[0.03];
+    @apply block min-h-[4.5rem] border-r border-white/5 transition-colors last:border-r-0 hover:bg-white/[0.03];
   }
 
   .weekly-header-row,
@@ -160,7 +182,11 @@
   }
 
   .weekly-booking-chip {
-    @apply flex cursor-pointer flex-col rounded-md border border-brand/25 bg-brand/10 px-2 py-1.5 transition-colors hover:bg-brand/20;
+    @apply flex cursor-pointer flex-col rounded-md border border-brand/25 bg-brand/15 px-2 py-1.5 text-brand transition-colors hover:bg-brand/25;
+  }
+
+  .weekly-booking-chip-pending {
+    @apply flex cursor-pointer flex-col rounded-md border border-dashed border-status-pending/70 bg-status-pending/10 px-2 py-1.5 text-status-pending transition-colors hover:bg-status-pending/15;
   }
 
   .weekly-slot-empty {
@@ -180,7 +206,7 @@
   }
 
   .toast {
-    @apply fixed right-6 bottom-6 z-50 rounded-lg border px-4 py-3 text-sm shadow-lg;
+    @apply fixed right-4 bottom-24 z-50 rounded-lg border px-4 py-3 text-sm shadow-lg lg:right-6 lg:bottom-6;
   }
 
   .toast-success {
@@ -205,24 +231,74 @@
   }
 
   .action-edit {
-    @apply cursor-pointer rounded-md border border-white/10 px-2.5 py-1 text-xs font-medium text-muted transition-colors hover:border-brand/50 hover:bg-brand/10 hover:text-brand;
+    @apply hover:border-brand/50 hover:bg-brand/10 hover:text-brand;
   }
 
-  .list-row {
-    @apply grid items-center gap-x-6 border-b border-white/5 px-6 last:border-b-0;
-    grid-template-columns: 4.5rem minmax(0, 1fr) 11rem 14rem;
+  .booking-row {
+    @apply grid items-center gap-x-4 gap-y-3 border-b border-white/5 px-4 py-4 last:border-b-0 sm:px-6;
+    grid-template-columns: 4.5rem minmax(0, 1fr) 9rem;
+    grid-template-areas:
+      "time title title"
+      "time room room"
+      ". status actions";
   }
 
-  .list-row-compact {
-    @apply grid items-center gap-x-6 border-b border-white/5 px-6 py-4 last:border-b-0;
-    grid-template-columns: 4.5rem minmax(0, 1fr) 11rem 6.5rem;
+  @media (min-width: 768px) {
+    .booking-row {
+      grid-template-columns: 4.5rem minmax(0, 1.2fr) minmax(0, 10.5rem) 6.75rem 9rem;
+      grid-template-areas: "time title room status actions";
+    }
   }
 
-  .list-row-actions {
-    @apply flex items-center gap-3;
+  .booking-row-time {
+    grid-area: time;
   }
 
-  .list-row-action-buttons {
-    @apply ml-auto flex shrink-0 gap-3;
+  .booking-row-title {
+    grid-area: title;
+    @apply min-w-0;
+  }
+
+  .booking-row-room {
+    grid-area: room;
+    @apply min-w-0;
+  }
+
+  .booking-row-status {
+    grid-area: status;
+  }
+
+  .booking-row-actions {
+    grid-area: actions;
+    @apply grid grid-cols-2 items-center gap-2;
+    grid-template-columns: 3.75rem 4.75rem;
+  }
+
+  .nav-tab-active {
+    @apply flex flex-1 cursor-pointer flex-col items-center gap-1 py-2.5 text-[11px] font-medium text-white;
+  }
+
+  .nav-tab-idle {
+    @apply flex flex-1 cursor-pointer flex-col items-center gap-1 py-2.5 text-[11px] font-medium text-muted;
+  }
+
+  .room-card {
+    @apply block rounded-2xl bg-card p-5 transition-colors hover:bg-elevated/60;
+  }
+
+  .room-badge-free {
+    @apply shrink-0 rounded-full border border-brand/35 bg-brand/10 px-2.5 py-0.5 text-xs font-medium text-brand;
+  }
+
+  .room-badge-busy {
+    @apply shrink-0 rounded-full border border-status-pending/40 bg-status-pending/10 px-2.5 py-0.5 text-xs font-medium text-status-pending;
+  }
+
+  .room-badge-down {
+    @apply shrink-0 rounded-full border border-white/15 bg-white/5 px-2.5 py-0.5 text-xs font-medium text-muted;
+  }
+
+  .room-tag {
+    @apply rounded-full bg-elevated px-2.5 py-1 text-xs text-muted;
   }
 }

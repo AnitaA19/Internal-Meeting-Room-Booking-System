@@ -22,7 +22,9 @@ const statusOptions = [
 type BookingFormProps = {
   initialValues: BookingInput;
   submitLabel: string;
-  onSubmit: (values: BookingInput) => { success: boolean; error?: string };
+  onSubmit: (
+    values: BookingInput,
+  ) => { success: true; bookingId: string } | { success: false; error?: string };
   onCancel?: () => void;
 };
 
@@ -36,7 +38,9 @@ export function BookingForm({
   const [form, setForm] = useState<BookingInput>(initialValues);
   const [error, setError] = useState("");
 
-  const rooms = roomRepository.getAllRooms();
+  const rooms = roomRepository
+    .getAllRooms()
+    .filter((room) => room.status !== "maintenance" || room.id === form.roomId);
   const employees = employeeRepository.getAllEmployees();
 
   const roomOptions = [
@@ -79,11 +83,11 @@ export function BookingForm({
     const result = onSubmit(form);
 
     if (!result.success) {
-      setError(result.error ?? "Something went wrong.");
+      setError(result.error ?? "Couldn't save that.");
       return;
     }
 
-    navigate("/bookings");
+    navigate(`/bookings/${result.bookingId}`);
   }
 
   function handleCancel() {

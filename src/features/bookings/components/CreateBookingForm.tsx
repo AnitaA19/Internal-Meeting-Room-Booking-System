@@ -20,7 +20,7 @@ export function CreateBookingForm() {
 
         if (result.success) {
           showToast("Booking created.");
-          return { success: true };
+          return { success: true, bookingId: result.booking.id };
         }
 
         return { success: false, error: result.error };

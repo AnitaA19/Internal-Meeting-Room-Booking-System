@@ -11,6 +11,10 @@ class EmployeeRepository {
   getAllEmployees(): Employee[] {
     return this.employees;
   }
+
+  getEmployeeById(id: string): Employee | undefined {
+    return this.employees.find((employee) => employee.id === id);
+  }
 }
 
 export default EmployeeRepository;

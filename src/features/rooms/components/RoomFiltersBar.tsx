@@ -1,6 +1,6 @@
 import type { RoomType } from "../types/room";
 import { SelectField } from "../../../components/ui/SelectField";
-import type { RoomFilters } from "../filterRooms";
+import type { CapacityBucket, RoomFilters } from "../filterRooms";
 
 const roomTypeOptions: { value: RoomType | "all"; label: string }[] = [
   { value: "all", label: "All types" },
@@ -8,6 +8,13 @@ const roomTypeOptions: { value: RoomType | "all"; label: string }[] = [
   { value: "conference", label: "Conference" },
   { value: "interview", label: "Interview" },
   { value: "training", label: "Training" },
+];
+
+const capacityOptions: { value: CapacityBucket; label: string }[] = [
+  { value: "all", label: "Any size" },
+  { value: "small", label: "Up to 4" },
+  { value: "medium", label: "5–10 people" },
+  { value: "large", label: "11+" },
 ];
 
 type RoomFiltersBarProps = {
@@ -23,7 +30,7 @@ export function RoomFiltersBar({ filters, floors, onChange }: RoomFiltersBarProp
   ];
 
   return (
-    <div className="grid gap-3 sm:grid-cols-2">
+    <div className="grid gap-3 sm:grid-cols-3">
       <SelectField
         value={filters.type}
         onChange={(type) =>
@@ -40,6 +47,13 @@ export function RoomFiltersBar({ filters, floors, onChange }: RoomFiltersBarProp
           })
         }
         options={floorOptions}
+      />
+      <SelectField
+        value={filters.capacity}
+        onChange={(capacity) =>
+          onChange({ ...filters, capacity: capacity as CapacityBucket })
+        }
+        options={capacityOptions}
       />
     </div>
   );

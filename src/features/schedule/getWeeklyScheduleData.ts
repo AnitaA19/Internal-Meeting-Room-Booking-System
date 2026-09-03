@@ -1,10 +1,9 @@
 import { addDays, isSameDay, startOfWeek } from "date-fns";
 
 import type { Booking } from "../bookings/types/booking";
-import type { Employee } from "../employees/types/employee";
 import type { Room } from "../rooms/types/room";
 import { toIsoDate } from "../../lib/formatDate";
-import { employeeRepository, roomRepository } from "../../lib/repositories";
+import { roomRepository } from "../../lib/repositories";
 import { parseIsoDate } from "./getBookingsForDate";
 
 export type WeekDay = {
@@ -17,7 +16,6 @@ export type WeeklyScheduleData = {
   rooms: Room[];
   days: WeekDay[];
   bookingsByRoomAndDay: Map<string, Map<string, Booking[]>>;
-  employeeById: Map<string, Employee>;
   bookingCount: number;
 };
 
@@ -40,10 +38,8 @@ export function getWeeklyScheduleData(
   isoDate: string,
   allBookings: Booking[],
 ): WeeklyScheduleData {
-  const rooms = roomRepository.getAllRooms();
+  const rooms = roomRepository.getAllRooms().filter((room) => room.status !== "maintenance");
   const days = getWeekDays(isoDate);
-  const employees = employeeRepository.getAllEmployees();
-  const employeeById = new Map(employees.map((employee) => [employee.id, employee]));
 
   const activeBookings = allBookings.filter((booking) => booking.status !== "cancelled");
   const bookingsByRoomAndDay = new Map<string, Map<string, Booking[]>>();
@@ -68,5 +64,5 @@ export function getWeeklyScheduleData(
     bookingsByRoomAndDay.set(room.id, dayMap);
   }
 
-  return { rooms, days, bookingsByRoomAndDay, employeeById, bookingCount };
+  return { rooms, days, bookingsByRoomAndDay, bookingCount };
 }

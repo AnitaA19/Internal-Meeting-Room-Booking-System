@@ -1,67 +1,50 @@
 # Meeting Room Booking
 
-Internal app for browsing rooms, viewing the schedule, and managing meeting bookings.
+Internal app for browsing rooms, viewing the schedule, and managing meetings.
 
-## Features
+## What’s in here
 
-- **Dashboard** — live room availability, today's meetings
-- **Rooms** — search and filter by type/floor, room detail pages
-- **Schedule** — daily timeline and weekly overview, click a slot to book
-- **Bookings** — create, edit, cancel upcoming meetings with conflict checks
-- **URL state** — filters and dates persist in query params
-- **Persistence** — booking changes saved to localStorage
+- **Dashboard** — who’s free right now, and what’s happening today
+- **Rooms** — search by name/amenity, filter by type, floor, and size
+- **Schedule** — day timeline and week grid; empty slots book, existing blocks open details
+- **Bookings** — create, inspect, edit, cancel; upcoming / past / all
+- **URL state** — filters and the selected date live in the query string
+- **Persistence** — booking changes survive a refresh (`localStorage`)
 
-## Tech stack
+## Stack
 
-- React 19 + TypeScript + Vite
-- Tailwind CSS v4
-- React Router
-- Zustand (bookings + UI notifications)
-- date-fns
-- lucide-react
+React 19, TypeScript, Vite, Tailwind v4, React Router, Zustand, date-fns.
 
-## Getting started
+## Run it
 
 ```bash
 npm install
 npm run dev
 ```
 
-Open [http://localhost:5173](http://localhost:5173).
+Open http://localhost:5173.
 
-## Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Start dev server |
+| Command | What it does |
+|---|---|
+| `npm run dev` | Dev server |
 | `npm run build` | Production build |
-| `npm run preview` | Preview production build |
-| `npm run lint` | Run ESLint |
+| `npm run preview` | Serve the build |
+| `npm run lint` | ESLint |
 
 ## Deploy
 
-The project includes a `vercel.json` for SPA routing. Deploy with:
+`vercel.json` rewrites all routes to `index.html`. Connect the repo to Vercel (or run `vercel`) after `npm run build`.
 
-```bash
-npm run build
-```
-
-Then push to Vercel, or run `vercel` if you have the CLI installed.
-
-## Project structure
+## Layout
 
 ```
 src/
 ├── app/           # Router
-├── components/    # Layout + shared UI
-├── config/        # Navigation
+├── components/    # Shell + shared UI
 ├── data/          # Seed JSON
-├── features/      # Domain modules
-├── lib/           # Utilities
-├── pages/         # Standalone pages (404)
-└── store/         # Zustand stores
+├── features/      # Rooms, bookings, schedule, dashboard
+├── lib/           # Repositories, storage, URL helpers
+└── store/         # Zustand
 ```
 
-## Data
-
-Rooms and employees are read from JSON seed files. Bookings load from seed data on first visit, then persist to `localStorage` under the key `bookings`.
+Rooms and employees always come from the JSON seeds. Bookings seed on first visit, then live under the `bookings` storage key.

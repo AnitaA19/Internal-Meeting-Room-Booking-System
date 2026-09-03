@@ -5,38 +5,38 @@ import { PageHeader } from "../../components/ui/PageHeader";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { useQueryParams } from "../../lib/useQueryParams";
 import { useBookingStore } from "../../store/bookingStore";
-import { useUiStore } from "../../store/uiStore";
 import { BookingDateGroup } from "./components/BookingDateGroup";
 import { BookingFiltersBar } from "./components/BookingFiltersBar";
 import { BookingSearch } from "./components/BookingSearch";
 import {
   applyBookingFilters,
   defaultBookingFilters,
+  parseBookingRange,
   parseBookingStatus,
   type BookingFilters,
 } from "./filterBookings";
 import { getBookingsPageData } from "./getBookingsPageData";
 import { groupBookingsByDate } from "./groupBookingsByDate";
 import { searchBookings } from "./searchBookings";
+import { useCancelBooking } from "./useCancelBooking";
 
 export function BookingsPage() {
   const [searchParams, updateParams] = useQueryParams();
   const bookings = useBookingStore((state) => state.bookings);
-  const cancelBooking = useBookingStore((state) => state.cancelBooking);
-  const askConfirm = useUiStore((state) => state.askConfirm);
-  const showToast = useUiStore((state) => state.showToast);
+  const requestCancel = useCancelBooking();
 
   const query = searchParams.get("q") ?? "";
   const filters: BookingFilters = {
     status: parseBookingStatus(searchParams.get("status")),
+    range: parseBookingRange(searchParams.get("range")),
   };
 
-  const { bookings: upcomingBookings, roomById, employeeById } = useMemo(
+  const { bookings: allBookings, roomById, employeeById } = useMemo(
     () => getBookingsPageData(bookings),
     [bookings],
   );
   const filteredBookings = searchBookings(
-    applyBookingFilters(upcomingBookings, filters),
+    applyBookingFilters(allBookings, filters),
     query,
     { roomById, employeeById },
   );
@@ -59,24 +59,12 @@ export function BookingsPage() {
       } else {
         params.set("status", nextFilters.status);
       }
-    });
-  }
 
-  function handleCancel(bookingId: string) {
-    askConfirm({
-      title: "Cancel booking",
-      message: "This meeting will be marked as cancelled.",
-      confirmLabel: "Cancel booking",
-      onConfirm: () => {
-        const result = cancelBooking(bookingId);
-
-        if (result.success) {
-          showToast("Booking cancelled.");
-          return;
-        }
-
-        showToast(result.error, "error");
-      },
+      if (nextFilters.range === defaultBookingFilters.range) {
+        params.delete("range");
+      } else {
+        params.set("range", nextFilters.range);
+      }
     });
   }
 
@@ -84,7 +72,7 @@ export function BookingsPage() {
     <>
       <PageHeader
         title="Bookings"
-        subtitle="Everything booked over the next two days."
+        subtitle="Search, edit, or cancel meetings."
         actions={<BookingFiltersBar filters={filters} onChange={setFilters} />}
       />
 
@@ -106,12 +94,12 @@ export function BookingsPage() {
               bookings={group.bookings}
               roomById={roomById}
               employeeById={employeeById}
-              onCancel={handleCancel}
+              onCancel={requestCancel}
             />
           ))}
         </div>
       ) : (
-        <EmptyState message="No bookings match your search or filters." />
+        <EmptyState message="Nothing matches these filters." />
       )}
     </>
   );
