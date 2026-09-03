@@ -1,4 +1,3 @@
-import type { ReactNode } from "react";
 import { Link, Navigate, useParams } from "react-router-dom";
 
 import { PageHeader } from "../../components/ui/PageHeader";
@@ -63,39 +62,49 @@ export function BookingDetailPage() {
         </div>
 
         <dl className="mt-6 grid gap-5 sm:grid-cols-2">
-          <Detail term="When">
-            {formatShortDate(booking.startTime)}
-            <span className="mt-0.5 block text-white">
-              {formatTimeRange(booking.startTime, booking.endTime)}
-            </span>
-          </Detail>
-          <Detail term="Room">
-            {room ? (
-              <Link to={`/rooms/${room.id}`} className="hover:text-brand">
-                {room.name}
-              </Link>
-            ) : (
-              "—"
-            )}
-            {room && (
-              <span className="mt-0.5 block text-sm text-muted">
-                {room.location} · {room.capacity} seats
+          <div>
+            <dt className="text-xs font-medium tracking-wider text-muted">WHEN</dt>
+            <dd className="mt-1 text-sm">
+              {formatShortDate(booking.startTime)}
+              <span className="mt-0.5 block text-white">
+                {formatTimeRange(booking.startTime, booking.endTime)}
               </span>
-            )}
-          </Detail>
-          <Detail term="Organizer">
-            {organizer?.name ?? "—"}
-            {organizer && (
-              <span className="mt-0.5 block text-sm text-muted">
-                {organizer.department}
-              </span>
-            )}
-          </Detail>
-          <Detail term="People">
-            {attendees.length === 0
-              ? "—"
-              : attendees.map((person) => person.name).join(", ")}
-          </Detail>
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs font-medium tracking-wider text-muted">ROOM</dt>
+            <dd className="mt-1 text-sm">
+              {room ? (
+                <Link to={`/rooms/${room.id}`} className="hover:text-brand">
+                  {room.name}
+                </Link>
+              ) : (
+                "—"
+              )}
+              {room && (
+                <span className="mt-0.5 block text-sm text-muted">
+                  {room.location} · {room.capacity} seats
+                </span>
+              )}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs font-medium tracking-wider text-muted">ORGANIZER</dt>
+            <dd className="mt-1 text-sm">
+              {organizer?.name ?? "—"}
+              {organizer && (
+                <span className="mt-0.5 block text-sm text-muted">{organizer.department}</span>
+              )}
+            </dd>
+          </div>
+          <div>
+            <dt className="text-xs font-medium tracking-wider text-muted">PEOPLE</dt>
+            <dd className="mt-1 text-sm">
+              {attendees.length === 0
+                ? "—"
+                : attendees.map((person) => person.name).join(", ")}
+            </dd>
+          </div>
         </dl>
 
         {booking.notes && (
@@ -106,14 +115,5 @@ export function BookingDetailPage() {
         )}
       </div>
     </>
-  );
-}
-
-function Detail({ term, children }: { term: string; children: ReactNode }) {
-  return (
-    <div>
-      <dt className="text-xs font-medium tracking-wider text-muted">{term.toUpperCase()}</dt>
-      <dd className="mt-1 text-sm">{children}</dd>
-    </div>
   );
 }

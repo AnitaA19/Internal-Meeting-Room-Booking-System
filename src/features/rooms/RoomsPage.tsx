@@ -2,12 +2,12 @@ import { useMemo } from "react";
 
 import { PageHeader } from "../../components/ui/PageHeader";
 import { EmptyState } from "../../components/ui/EmptyState";
+import { SearchInput } from "../../components/ui/SearchInput";
 import { useQueryParams } from "../../lib/useQueryParams";
 import { roomRepository } from "../../lib/repositories";
 import { useBookingStore } from "../../store/bookingStore";
 import { RoomCard } from "./components/RoomCard";
 import { RoomFiltersBar } from "./components/RoomFiltersBar";
-import { RoomSearch } from "./components/RoomSearch";
 import {
   applyRoomFilters,
   defaultRoomFilters,
@@ -75,7 +75,11 @@ export function RoomsPage() {
       />
 
       <div className="mb-6 flex flex-col gap-3">
-        <RoomSearch query={query} onChange={setQuery} />
+        <SearchInput
+          value={query}
+          onChange={setQuery}
+          placeholder="Name, floor, or amenity"
+        />
         <RoomFiltersBar filters={filters} floors={floors} onChange={setFilters} />
       </div>
 

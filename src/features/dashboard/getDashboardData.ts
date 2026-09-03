@@ -17,14 +17,6 @@ export type DashboardData = {
   employeeById: Map<string, Employee>;
 };
 
-function isBookingActiveNow(booking: Booking, now: Date): boolean {
-  return (
-    booking.status !== "cancelled" &&
-    booking.startTime <= now &&
-    booking.endTime > now
-  );
-}
-
 export function getDashboardData(allBookings: Booking[]): DashboardData {
   const today = new Date();
   const rooms = roomRepository.getAllRooms();
@@ -39,7 +31,12 @@ export function getDashboardData(allBookings: Booking[]): DashboardData {
   const openRooms = rooms.filter((room) => room.status !== "maintenance");
   const busyRoomIds = new Set(
     allBookings
-      .filter((booking) => isBookingActiveNow(booking, today))
+      .filter(
+        (booking) =>
+          booking.status !== "cancelled" &&
+          booking.startTime <= today &&
+          booking.endTime > today,
+      )
       .map((booking) => booking.roomId),
   );
 

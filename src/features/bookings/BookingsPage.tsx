@@ -3,11 +3,11 @@ import { Link } from "react-router-dom";
 
 import { PageHeader } from "../../components/ui/PageHeader";
 import { EmptyState } from "../../components/ui/EmptyState";
+import { SearchInput } from "../../components/ui/SearchInput";
 import { useQueryParams } from "../../lib/useQueryParams";
 import { useBookingStore } from "../../store/bookingStore";
 import { BookingDateGroup } from "./components/BookingDateGroup";
 import { BookingFiltersBar } from "./components/BookingFiltersBar";
-import { BookingSearch } from "./components/BookingSearch";
 import {
   applyBookingFilters,
   defaultBookingFilters,
@@ -81,7 +81,11 @@ export function BookingsPage() {
           New booking
         </Link>
         <div className="flex-1">
-          <BookingSearch query={query} onChange={setQuery} />
+          <SearchInput
+            value={query}
+            onChange={setQuery}
+            placeholder="Search by meeting, room, or organizer"
+          />
         </div>
       </div>
 

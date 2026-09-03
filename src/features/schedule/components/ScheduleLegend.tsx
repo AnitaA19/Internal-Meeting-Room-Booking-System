@@ -1,10 +1,6 @@
-type ScheduleLegendProps = {
-  className?: string;
-};
-
-export function ScheduleLegend({ className }: ScheduleLegendProps) {
+export function ScheduleLegend() {
   return (
-    <div className={className ?? "flex items-center gap-4 text-xs text-muted"}>
+    <div className="flex items-center gap-4 text-xs text-muted">
       <span className="inline-flex items-center gap-2">
         <span className="size-2 rounded-full bg-brand" />
         Confirmed
