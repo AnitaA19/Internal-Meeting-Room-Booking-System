@@ -1,4 +1,5 @@
 import type { Room, RoomType } from "../types/room";
+import { Link } from "react-router-dom";
 
 const roomTypeNames: Record<RoomType, string> = {
   meeting: "Meeting room",
@@ -15,7 +16,9 @@ export function RoomCard({ room }: RoomCardProps) {
   return (
     <article className="rounded-xl bg-card p-5">
       <div className="flex items-start justify-between gap-3">
-        <h2 className="text-lg font-semibold">{room.name}</h2>
+        <Link to={`/rooms/${room.id}`} className="text-lg font-semibold hover:text-brand">
+          {room.name}
+        </Link>
         <span className="shrink-0 text-sm text-muted">{roomTypeNames[room.type]}</span>
       </div>
 

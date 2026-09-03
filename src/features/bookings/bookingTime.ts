@@ -1,5 +1,5 @@
 import type { Booking } from "./types/booking";
-import type { CreateBookingInput } from "./createBooking";
+import type { BookingInput } from "./bookingInput";
 import { toIsoDate } from "../../lib/formatDate";
 
 export function combineDateAndTime(date: string, time: string): Date {
@@ -13,7 +13,7 @@ export function toTimeInput(date: Date): string {
   return `${hours}:${minutes}`;
 }
 
-export function bookingToFormInput(booking: Booking): CreateBookingInput {
+export function bookingToFormInput(booking: Booking): BookingInput {
   return {
     title: booking.title,
     roomId: booking.roomId,
@@ -21,5 +21,8 @@ export function bookingToFormInput(booking: Booking): CreateBookingInput {
     date: toIsoDate(booking.startTime),
     startTime: toTimeInput(booking.startTime),
     endTime: toTimeInput(booking.endTime),
+    status: booking.status === "cancelled" ? "confirmed" : booking.status,
+    participantIds: booking.participantIds,
+    notes: booking.notes ?? "",
   };
 }

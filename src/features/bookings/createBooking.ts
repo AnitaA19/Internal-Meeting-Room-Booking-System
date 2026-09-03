@@ -1,22 +1,17 @@
 import type { Booking } from "./types/booking";
 import { bookingRepository } from "../../lib/repositories";
+import {
+  ensureOrganizerInParticipants,
+  type BookingInput,
+} from "./bookingInput";
 import { combineDateAndTime } from "./bookingTime";
 import { hasRoomConflict } from "./hasRoomConflict";
-
-export type CreateBookingInput = {
-  title: string;
-  roomId: string;
-  userId: string;
-  date: string;
-  startTime: string;
-  endTime: string;
-};
 
 type CreateBookingResult =
   | { success: true; booking: Booking }
   | { success: false; error: string };
 
-export function createBooking(input: CreateBookingInput): CreateBookingResult {
+export function createBooking(input: BookingInput): CreateBookingResult {
   const title = input.title.trim();
 
   if (!title) {
@@ -48,6 +43,11 @@ export function createBooking(input: CreateBookingInput): CreateBookingResult {
     return { success: false, error: "This room is already booked for that time." };
   }
 
+  const participantIds = ensureOrganizerInParticipants(
+    input.participantIds.length > 0 ? input.participantIds : [input.userId],
+    input.userId,
+  );
+
   const booking: Booking = {
     id: `booking-${crypto.randomUUID()}`,
     title,
@@ -55,11 +55,15 @@ export function createBooking(input: CreateBookingInput): CreateBookingResult {
     userId: input.userId,
     startTime,
     endTime,
-    status: "confirmed",
-    participantIds: [input.userId],
+    status: input.status,
+    participantIds,
+    notes: input.notes.trim() || undefined,
   };
 
   bookingRepository.createBooking(booking);
 
   return { success: true, booking };
 }
+
+// Keep legacy export name for any external refs
+export type { BookingInput as CreateBookingInput };

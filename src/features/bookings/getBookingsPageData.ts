@@ -1,12 +1,11 @@
-import { bookingRepository, employeeRepository, roomRepository } from "../../lib/repositories";
+import type { Booking } from "./types/booking";
+import { employeeRepository, roomRepository } from "../../lib/repositories";
 import { getUpcomingBookings } from "./getUpcomingBookings";
 
-export function getBookingsPageData() {
-  const allBookings = bookingRepository
-    .getAllBookings()
-    .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
-
-  const bookings = getUpcomingBookings(allBookings);
+export function getBookingsPageData(allBookings: Booking[]) {
+  const bookings = getUpcomingBookings(
+    [...allBookings].sort((a, b) => a.startTime.getTime() - b.startTime.getTime()),
+  );
   const rooms = roomRepository.getAllRooms();
   const employees = employeeRepository.getAllEmployees();
 

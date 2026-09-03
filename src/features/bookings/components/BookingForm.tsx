@@ -3,16 +3,26 @@ import { useNavigate } from "react-router-dom";
 
 import { DateField } from "../../../components/ui/DateField";
 import { FormField } from "../../../components/ui/FormField";
+import { ParticipantPicker } from "../../../components/ui/ParticipantPicker";
 import { SelectField } from "../../../components/ui/SelectField";
 import { TimePicker } from "../../../components/ui/TimePicker";
 import { getNextTimeSlot } from "../../../lib/timeOptions";
 import { employeeRepository, roomRepository } from "../../../lib/repositories";
-import type { CreateBookingInput } from "../createBooking";
+import {
+  ensureOrganizerInParticipants,
+  type BookingInput,
+} from "../bookingInput";
+import type { BookingStatus } from "../types/booking";
+
+const statusOptions = [
+  { value: "confirmed", label: "Confirmed" },
+  { value: "pending", label: "Pending" },
+];
 
 type BookingFormProps = {
-  initialValues: CreateBookingInput;
+  initialValues: BookingInput;
   submitLabel: string;
-  onSubmit: (values: CreateBookingInput) => { success: boolean; error?: string };
+  onSubmit: (values: BookingInput) => { success: boolean; error?: string };
   onCancel?: () => void;
 };
 
@@ -23,7 +33,7 @@ export function BookingForm({
   onCancel,
 }: BookingFormProps) {
   const navigate = useNavigate();
-  const [form, setForm] = useState<CreateBookingInput>(initialValues);
+  const [form, setForm] = useState<BookingInput>(initialValues);
   const [error, setError] = useState("");
 
   const rooms = roomRepository.getAllRooms();
@@ -39,11 +49,16 @@ export function BookingForm({
     ...employees.map((employee) => ({ value: employee.id, label: employee.name })),
   ];
 
-  function updateField<K extends keyof CreateBookingInput>(
-    field: K,
-    value: CreateBookingInput[K],
-  ) {
+  function updateField<K extends keyof BookingInput>(field: K, value: BookingInput[K]) {
     setForm((current) => ({ ...current, [field]: value }));
+  }
+
+  function handleOrganizerChange(userId: string) {
+    setForm((current) => ({
+      ...current,
+      userId,
+      participantIds: ensureOrganizerInParticipants(current.participantIds, userId),
+    }));
   }
 
   function handleStartTimeChange(startTime: string) {
@@ -104,8 +119,17 @@ export function BookingForm({
         <FormField label="Organizer">
           <SelectField
             value={form.userId}
-            onChange={(userId) => updateField("userId", userId)}
+            onChange={handleOrganizerChange}
             options={employeeOptions}
+          />
+        </FormField>
+
+        <FormField label="Attendees">
+          <ParticipantPicker
+            employees={employees}
+            selectedIds={form.participantIds}
+            organizerId={form.userId}
+            onChange={(participantIds) => updateField("participantIds", participantIds)}
           />
         </FormField>
 
@@ -126,6 +150,24 @@ export function BookingForm({
             />
           </FormField>
         </div>
+
+        <FormField label="Status">
+          <SelectField
+            value={form.status}
+            onChange={(status) => updateField("status", status as BookingStatus)}
+            options={statusOptions}
+          />
+        </FormField>
+
+        <FormField label="Notes">
+          <textarea
+            value={form.notes}
+            onChange={(event) => updateField("notes", event.target.value)}
+            placeholder="Optional details for the team"
+            rows={3}
+            className="control resize-none"
+          />
+        </FormField>
       </div>
 
       {error && <p className="mt-4 text-sm text-status-pending">{error}</p>}

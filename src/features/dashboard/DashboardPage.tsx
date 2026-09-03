@@ -1,11 +1,15 @@
+import { useMemo } from "react";
+
 import { PageHeader } from "../../components/ui/PageHeader";
 import { Metric } from "../../components/ui/Metric";
 import { formatDashboardDate } from "../../lib/formatDate";
+import { useBookingStore } from "../../store/bookingStore";
 import { TodaySchedule } from "./components/TodaySchedule";
 import { getDashboardData } from "./getDashboardData";
 
 export function DashboardPage() {
-  const data = getDashboardData();
+  const bookings = useBookingStore((state) => state.bookings);
+  const data = useMemo(() => getDashboardData(bookings), [bookings]);
 
   return (
     <>

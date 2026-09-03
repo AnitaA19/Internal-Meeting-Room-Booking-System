@@ -1,26 +1,29 @@
-import { toIsoDate } from "../../../lib/formatDate";
-import { createBooking, type CreateBookingInput } from "../createBooking";
+import { useSearchParams } from "react-router-dom";
+
+import { parseBookingPrefill } from "../../../lib/bookingPrefill";
+import { useBookingStore } from "../../../store/bookingStore";
+import { useUiStore } from "../../../store/uiStore";
 import { BookingForm } from "./BookingForm";
 
-const emptyForm: CreateBookingInput = {
-  title: "",
-  roomId: "",
-  userId: "",
-  date: toIsoDate(new Date()),
-  startTime: "09:00",
-  endTime: "10:00",
-};
-
 export function CreateBookingForm() {
+  const [searchParams] = useSearchParams();
+  const createBooking = useBookingStore((state) => state.createBooking);
+  const showToast = useUiStore((state) => state.showToast);
+  const initialValues = parseBookingPrefill(searchParams);
+
   return (
     <BookingForm
-      initialValues={emptyForm}
+      initialValues={initialValues}
       submitLabel="Create booking"
       onSubmit={(values) => {
         const result = createBooking(values);
-        return result.success
-          ? { success: true }
-          : { success: false, error: result.error };
+
+        if (result.success) {
+          showToast("Booking created.");
+          return { success: true };
+        }
+
+        return { success: false, error: result.error };
       }}
     />
   );

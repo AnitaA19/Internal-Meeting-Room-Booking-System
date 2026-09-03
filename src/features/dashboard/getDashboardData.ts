@@ -3,7 +3,7 @@ import { isSameDay } from "date-fns";
 import type { Booking } from "../bookings/types/booking";
 import type { Employee } from "../employees/types/employee";
 import type { Room } from "../rooms/types/room";
-import { bookingRepository, employeeRepository, roomRepository } from "../../lib/repositories";
+import { employeeRepository, roomRepository } from "../../lib/repositories";
 
 export type DashboardData = {
   today: Date;
@@ -24,22 +24,21 @@ function isBookingActiveNow(booking: Booking, now: Date): boolean {
   );
 }
 
-export function getDashboardData(): DashboardData {
+export function getDashboardData(allBookings: Booking[]): DashboardData {
   const today = new Date();
   const rooms = roomRepository.getAllRooms();
   const employees = employeeRepository.getAllEmployees();
-  const bookings = bookingRepository.getAllBookings();
 
   const roomById = new Map(rooms.map((room) => [room.id, room]));
   const employeeById = new Map(employees.map((employee) => [employee.id, employee]));
 
-  const activeBookings = bookings.filter((booking) => booking.status !== "cancelled");
+  const activeBookings = allBookings.filter((booking) => booking.status !== "cancelled");
   const todaysBookings = activeBookings
     .filter((booking) => isSameDay(booking.startTime, today))
     .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
 
   const busyRoomIds = new Set(
-    bookings
+    allBookings
       .filter((booking) => isBookingActiveNow(booking, today))
       .map((booking) => booking.roomId),
   );

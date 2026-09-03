@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import { PageHeader } from "../../components/ui/PageHeader";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { useQueryParams } from "../../lib/useQueryParams";
-import { cancelBookingAction } from "./cancelBooking";
+import { useBookingStore } from "../../store/bookingStore";
+import { useUiStore } from "../../store/uiStore";
 import { BookingDateGroup } from "./components/BookingDateGroup";
 import { BookingFiltersBar } from "./components/BookingFiltersBar";
 import { BookingSearch } from "./components/BookingSearch";
@@ -20,19 +21,22 @@ import { searchBookings } from "./searchBookings";
 
 export function BookingsPage() {
   const [searchParams, updateParams] = useQueryParams();
-  const [refreshKey, setRefreshKey] = useState(0);
+  const bookings = useBookingStore((state) => state.bookings);
+  const cancelBooking = useBookingStore((state) => state.cancelBooking);
+  const askConfirm = useUiStore((state) => state.askConfirm);
+  const showToast = useUiStore((state) => state.showToast);
 
   const query = searchParams.get("q") ?? "";
   const filters: BookingFilters = {
     status: parseBookingStatus(searchParams.get("status")),
   };
 
-  const { bookings, roomById, employeeById } = useMemo(
-    () => getBookingsPageData(),
-    [refreshKey],
+  const { bookings: upcomingBookings, roomById, employeeById } = useMemo(
+    () => getBookingsPageData(bookings),
+    [bookings],
   );
   const filteredBookings = searchBookings(
-    applyBookingFilters(bookings, filters),
+    applyBookingFilters(upcomingBookings, filters),
     query,
     { roomById, employeeById },
   );
@@ -59,11 +63,21 @@ export function BookingsPage() {
   }
 
   function handleCancel(bookingId: string) {
-    const result = cancelBookingAction(bookingId);
+    askConfirm({
+      title: "Cancel booking",
+      message: "This meeting will be marked as cancelled.",
+      confirmLabel: "Cancel booking",
+      onConfirm: () => {
+        const result = cancelBooking(bookingId);
 
-    if (result.success) {
-      setRefreshKey((current) => current + 1);
-    }
+        if (result.success) {
+          showToast("Booking cancelled.");
+          return;
+        }
+
+        showToast(result.error, "error");
+      },
+    });
   }
 
   return (

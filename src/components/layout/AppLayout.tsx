@@ -1,6 +1,8 @@
 import { Calendar, ClipboardList, DoorOpen, LayoutGrid } from "lucide-react";
 import { NavLink, Outlet } from "react-router-dom";
 
+import { ConfirmDialog } from "../ui/ConfirmDialog";
+import { Toast } from "../ui/Toast";
 import { navigation } from "../../config/navigation";
 
 const navIcons = {
@@ -47,6 +49,9 @@ export function AppLayout() {
           <Outlet />
         </div>
       </main>
+
+      <Toast />
+      <ConfirmDialog />
     </div>
   );
 }

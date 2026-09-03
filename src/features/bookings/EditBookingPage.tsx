@@ -1,14 +1,19 @@
 import { Link, Navigate, useParams } from "react-router-dom";
 
 import { PageHeader } from "../../components/ui/PageHeader";
-import { bookingRepository } from "../../lib/repositories";
+import { useBookingStore } from "../../store/bookingStore";
+import { useUiStore } from "../../store/uiStore";
 import { bookingToFormInput } from "./bookingTime";
-import { isEditable, updateBooking } from "./updateBooking";
+import { isEditable } from "./updateBooking";
 import { BookingForm } from "./components/BookingForm";
 
 export function EditBookingPage() {
   const { id } = useParams();
-  const booking = id ? bookingRepository.getBookingById(id) : undefined;
+  const booking = useBookingStore((state) =>
+    id ? state.getBookingById(id) : undefined,
+  );
+  const updateBooking = useBookingStore((state) => state.updateBooking);
+  const showToast = useUiStore((state) => state.showToast);
 
   if (!booking) {
     return <Navigate to="/bookings" replace />;
@@ -34,9 +39,13 @@ export function EditBookingPage() {
         submitLabel="Save changes"
         onSubmit={(values) => {
           const result = updateBooking(booking.id, values);
-          return result.success
-            ? { success: true }
-            : { success: false, error: result.error };
+
+          if (result.success) {
+            showToast("Booking updated.");
+            return { success: true };
+          }
+
+          return { success: false, error: result.error };
         }}
       />
     </>

@@ -1,7 +1,10 @@
 import type { Booking } from "./types/booking";
 import { bookingRepository } from "../../lib/repositories";
+import {
+  ensureOrganizerInParticipants,
+  type BookingInput,
+} from "./bookingInput";
 import { combineDateAndTime } from "./bookingTime";
-import type { CreateBookingInput } from "./createBooking";
 import { hasRoomConflict } from "./hasRoomConflict";
 
 type UpdateBookingResult =
@@ -14,7 +17,7 @@ export function isEditable(booking: Booking): boolean {
 
 export function updateBooking(
   bookingId: string,
-  input: CreateBookingInput,
+  input: BookingInput,
 ): UpdateBookingResult {
   const existing = bookingRepository.getBookingById(bookingId);
 
@@ -65,6 +68,11 @@ export function updateBooking(
     return { success: false, error: "This room is already booked for that time." };
   }
 
+  const participantIds = ensureOrganizerInParticipants(
+    input.participantIds.length > 0 ? input.participantIds : [input.userId],
+    input.userId,
+  );
+
   const updatedBooking: Booking = {
     ...existing,
     title,
@@ -72,9 +80,9 @@ export function updateBooking(
     userId: input.userId,
     startTime,
     endTime,
-    participantIds: existing.participantIds.includes(input.userId)
-      ? existing.participantIds
-      : [input.userId, ...existing.participantIds.filter((id) => id !== existing.userId)],
+    status: input.status,
+    participantIds,
+    notes: input.notes.trim() || undefined,
   };
 
   bookingRepository.updateBooking(updatedBooking);

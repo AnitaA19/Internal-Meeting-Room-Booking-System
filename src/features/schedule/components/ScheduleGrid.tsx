@@ -4,10 +4,11 @@ import { ScheduleRoomRow } from "./ScheduleRoomRow";
 import { ScheduleTimeHeader } from "./ScheduleTimeHeader";
 
 type ScheduleGridProps = {
+  isoDate: string;
   data: ScheduleData;
 };
 
-export function ScheduleGrid({ data }: ScheduleGridProps) {
+export function ScheduleGrid({ isoDate, data }: ScheduleGridProps) {
   return (
     <div className="schedule-grid overflow-x-auto rounded-xl border border-white/5 bg-card">
       <div
@@ -19,6 +20,7 @@ export function ScheduleGrid({ data }: ScheduleGridProps) {
           <ScheduleRoomRow
             key={room.id}
             room={room}
+            isoDate={isoDate}
             bookings={data.bookingsByRoom.get(room.id) ?? []}
             employeeById={data.employeeById}
           />

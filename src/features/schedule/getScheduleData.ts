@@ -1,7 +1,7 @@
-import { bookingRepository, employeeRepository, roomRepository } from "../../lib/repositories";
 import type { Booking } from "../bookings/types/booking";
 import type { Employee } from "../employees/types/employee";
 import type { Room } from "../rooms/types/room";
+import { employeeRepository, roomRepository } from "../../lib/repositories";
 import { getBookingsForDate } from "./getBookingsForDate";
 
 export type ScheduleData = {
@@ -11,9 +11,9 @@ export type ScheduleData = {
   employeeById: Map<string, Employee>;
 };
 
-export function getScheduleData(isoDate: string): ScheduleData {
+export function getScheduleData(isoDate: string, allBookings: Booking[]): ScheduleData {
   const rooms = roomRepository.getAllRooms();
-  const bookings = getBookingsForDate(bookingRepository.getAllBookings(), isoDate);
+  const bookings = getBookingsForDate(allBookings, isoDate);
   const employees = employeeRepository.getAllEmployees();
 
   const bookingsByRoom = new Map<string, Booking[]>();
