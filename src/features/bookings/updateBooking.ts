@@ -9,7 +9,7 @@ type UpdateBookingResult =
   | { success: false; error: string };
 
 export function isEditable(booking: Booking): boolean {
-  return booking.status !== "cancelled" && booking.endTime > new Date();
+  return booking.status !== "cancelled" && booking.startTime > new Date();
 }
 
 export function updateBooking(
@@ -37,6 +37,13 @@ export function updateBooking(
 
   if (!room || (room.status === "maintenance" && room.id !== existing.roomId)) {
     return { success: false, error: "That room is out of service." };
+  }
+
+  if (value.participantIds.length > room.capacity) {
+    return {
+      success: false,
+      error: `${room.name} holds ${room.capacity} — trim the attendee list.`,
+    };
   }
 
   if (

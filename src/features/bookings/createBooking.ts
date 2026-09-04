@@ -22,6 +22,13 @@ export function createBooking(input: BookingInput): CreateBookingResult {
     return { success: false, error: "That room is out of service." };
   }
 
+  if (value.participantIds.length > room.capacity) {
+    return {
+      success: false,
+      error: `${room.name} holds ${room.capacity} — trim the attendee list.`,
+    };
+  }
+
   if (
     hasRoomConflict(
       bookingRepository.getAllBookings(),

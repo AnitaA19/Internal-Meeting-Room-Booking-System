@@ -44,6 +44,10 @@ export function resolveBookingInput(
     return { ok: false, error: "End needs to be after the start." };
   }
 
+  if (startTime <= new Date()) {
+    return { ok: false, error: "Pick a start time in the future." };
+  }
+
   return {
     ok: true,
     value: {

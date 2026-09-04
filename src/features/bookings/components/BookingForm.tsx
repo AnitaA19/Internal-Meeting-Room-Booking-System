@@ -42,10 +42,14 @@ export function BookingForm({
     .getAllRooms()
     .filter((room) => room.status !== "maintenance" || room.id === form.roomId);
   const employees = employeeRepository.getAllEmployees();
+  const selectedRoom = rooms.find((room) => room.id === form.roomId);
 
   const roomOptions = [
     { value: "", label: "Select a room" },
-    ...rooms.map((room) => ({ value: room.id, label: room.name })),
+    ...rooms.map((room) => ({
+      value: room.id,
+      label: `${room.name} · ${room.capacity} seats`,
+    })),
   ];
 
   const employeeOptions = [
@@ -128,7 +132,13 @@ export function BookingForm({
           />
         </FormField>
 
-        <FormField label="Attendees">
+        <FormField
+          label={
+            selectedRoom
+              ? `Attendees (${form.participantIds.length}/${selectedRoom.capacity})`
+              : "Attendees"
+          }
+        >
           <ParticipantPicker
             employees={employees}
             selectedIds={form.participantIds}
